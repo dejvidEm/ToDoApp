@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { BsArrowLeftCircle } from "react-icons/bs";
 
+// importy yup a formik ktore pouzivam na validaciu user inputov z formularu
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
@@ -18,11 +19,13 @@ const TodoForm: React.FC = () => {
     taskDatum: '',
   });
 
+  // vlaidacia dat cez yup metody
 const validationSchema = Yup.object().shape({
     taskMeno: Yup.string().required('Názov úlohy je potrebné vyplniť!'),
     taskDatum: Yup.string().required('Deadline úlohy je potrebné vyplniť!'),
   });
 
+  // s formikom som pracoval prvykrat, snazil som sa to spravit jednoducho tak aby som tomu chapal a vedel ho pouzit aj pri inych projektoch
   const formik = useFormik({
     initialValues: {
       taskMeno: '',
@@ -51,6 +54,7 @@ const validationSchema = Yup.object().shape({
     },
   });
 
+  // funkcia vytvorena pre minimalizaciu kodu, neviem ci je efektivna ale davala mi zmysel, za opravu budem rad
   const renderInput = (name: keyof TaskData, label: string, type: string = 'text') => (
     <div key={name} className='p-2 flex justify-center'>
       <label className='gap-4 flex flex-row items-center'>
