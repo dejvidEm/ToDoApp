@@ -54,7 +54,7 @@ const validationSchema = Yup.object().shape({
   const renderInput = (name: keyof TaskData, label: string, type: string = 'text') => (
     <div key={name} className='p-2 flex justify-center'>
       <label className='gap-4 flex flex-row items-center'>
-        {label}:
+        <h1 className='font-md sm:text-lg font-medium text-color-text'>{label}:</h1>
         <div>
         <input
           type={type}
