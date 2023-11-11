@@ -12,7 +12,7 @@ export default function DomovskaObrazovka() {
       </span>
       </button></Link>
       </div>
-      <p className='text-sm'>Vytvoril: Dávid Mikuláš pre <strong className='font-bold'>Am<span className="font-bold text-[#8bd84f]">c</span>ef</strong></p>
+      <p className='text-sm pb-20'>Vytvoril: Dávid Mikuláš pre <strong className='font-bold'>Am<span className="font-bold text-[#8bd84f]">c</span>ef</strong></p>
     </main>
   )
 }
