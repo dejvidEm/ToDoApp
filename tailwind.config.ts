@@ -14,7 +14,7 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       }, // definujem vlastné farby pre použitie v tailwinde
       colors: {
-        "bg-main": "#E0E0E2",
+        "bg-main": "#f1f5f9",
         "color-primary": "#2B4162",
         "color-secondary": "#AFCBFF",
         "color-extras": "#00E5E8",

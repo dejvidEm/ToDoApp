@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 
 
 interface Task {
@@ -12,6 +12,9 @@ interface Task {
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [showCompleted, setShowCompleted] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [listName, setListName] = useState<string>('Nový Zoznam');
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -71,31 +74,67 @@ const TaskList: React.FC = () => {
     }
   };
 
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleListNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setListName(e.target.value);
+  };
+
   return (
-    <main className='w-[500px] h-[300px] mx-auto pt-20 text-center'>
-    <div className='w-[500px] mx-auto pt-20 text-center'>
-      <h2>Task List</h2>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <strong>Meno:</strong> {task.taskMeno} | <strong>Text:</strong> {task.taskText} |{' '}
-            <strong>Datum:</strong> {task.taskDatum} |{' '}
-            <label>
-              <input
-                type="checkbox"
-                checked={task.taskDone}
-                onChange={() => handleTaskToggle(task.id, task.taskDone)}
-              />{' '}
-              Done
-            </label>
-            {' '}
-            <button onClick={() => handleTaskDelete(task.id)}>X</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-    <Link href="/todoapp/newtask" className="underline">Pridať nový Task</Link><br />
-    <Link href="/" className='underline'>Vratiť sa na domovskú obrazovku</Link>
+    <main className='w-[1000px] h-[300px] mx-auto pt-20 text-center'>
+      <div className='w-[1000px] mx-auto pt-20 text-center'>
+        <h2>{listName}</h2>
+        <label>
+        Zmeniť názov zoznamu:{' '}
+        <input
+          type="text"
+          value={listName}
+          onChange={handleListNameChange}
+        />
+        <button onClick={() => alert(`Zmenený názov na: ${listName}`)}>Potvrdiť</button>
+      </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showCompleted}
+            onChange={() => setShowCompleted(!showCompleted)}
+          />{' '}
+          Zobraziť dokončené
+        </label>
+        <input
+          type="text"
+          placeholder="Vyhľadávať podľa názvu"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+        <ul className='text-left py-10'>
+          {tasks
+            .filter((task) => (showCompleted ? true : !task.taskDone))
+            .filter((task) =>
+              task.taskMeno.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((task) => (
+              <li key={task.id}>
+                <strong>Meno:</strong> {task.taskMeno} | <strong>Text:</strong> {task.taskText} |{' '}
+                <strong>Datum:</strong> {task.taskDatum} |{' '}
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={task.taskDone}
+                    onChange={() => handleTaskToggle(task.id, task.taskDone)}
+                  />{' '}
+                  Done
+                </label>
+                {' '}
+                <button onClick={() => handleTaskDelete(task.id)}>X</button>
+              </li>
+            ))}
+        </ul>
+      </div>
+      <Link href="/todoapp/newtask" className="underline">Pridať nový Task</Link><br />
+      <Link href="/" className='underline'>Vratiť sa na domovskú obrazovku</Link>
     </main>
   );
 };
