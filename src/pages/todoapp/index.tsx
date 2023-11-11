@@ -86,7 +86,7 @@ const TaskList: React.FC = () => {
 
   return (
     <main className='mx-auto pt-20 text-center bg-bg-main h-screen'>
-    <div className='max-w-[1024px] mx-auto pt-20 text-center'>
+    <div className='max-w-[1024px] sm:px-0 px-10 mx-auto pt-20 text-center'>
     <h2 className='text-3xl font-bold mb-4'>{listName}</h2>
     <div className='mb-4 flex flex-col items-center'>
       <label className='mb-2'>
