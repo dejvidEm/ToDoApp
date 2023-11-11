@@ -161,7 +161,7 @@ const TaskList: React.FC = () => {
                         <strong>{task.taskMeno}</strong>
                       </div>
                       <div className="sm:w-1/2">
-                        <strong className='text-red-900 px-2'>Deadline:</strong> {formattedDate(task.taskDatum)}
+                        <strong className='text-red-900'>Deadline:</strong> {formattedDate(task.taskDatum)}
                       </div>
                     </div>
                     <div className="sm:flex">
