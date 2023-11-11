@@ -62,7 +62,7 @@ const validationSchema = Yup.object().shape({
           value={formik.values[name]}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          className='rounded-lg h-9 ml-3 pr-7'
+          className='rounded-lg h-9 ml-3 pr-7 pl-2'
         />
         {formik.touched[name] && formik.errors[name] && (
           <div className="error text-red-500">{formik.errors[name]}</div>
@@ -82,7 +82,7 @@ const validationSchema = Yup.object().shape({
 
       </form>
       <Link href="/todoapp" className="underline flex justify-center text-center items-center gap-2 -ml-4">
-        <BsArrowLeftCircle size={25} className="mt-1"/>Naspäť
+        <BsArrowLeftCircle size={20} className="mt-1"/>Naspäť
       </Link>
     </main>
   );

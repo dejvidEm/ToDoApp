@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { AiOutlineDelete } from "react-icons/ai";
-
-
+import { BsArrowLeftCircle, BsPencilSquare } from "react-icons/bs";
+import { IoAddCircleOutline } from "react-icons/io5";
+import { BiSearchAlt } from "react-icons/bi";
 
 interface Task {
   id: number;
@@ -15,7 +16,7 @@ interface Task {
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [search, setSearch] = useState<string>('');
   const [listName, setListName] = useState<string>('Nový Zoznam');
 
   useEffect(() => {
@@ -76,81 +77,95 @@ const TaskList: React.FC = () => {
     }
   };
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+
+  // funkcia ktorá sleduje stav hľadania a v react komponente filtruje dáta
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
   };
 
-  const handleListNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+
+  // funkcia ktorá pracuje so stavom zmeny názvu, po zmene uloží nové meno listu
+  const handleRename = (e: ChangeEvent<HTMLInputElement>) => {
     setListName(e.target.value);
   };
 
+
   return (
     <main className='mx-auto pt-20 text-center bg-bg-main h-screen'>
-    <div className='max-w-[1024px] sm:px-0 px-10 mx-auto pt-20 text-center'>
-    <h2 className='text-3xl font-bold mb-4'>{listName}</h2>
-    <div className='mb-4 flex flex-col items-center'>
-      <label className='mb-2'>
-        Zmeniť názov zoznamu:{' '}
+      <div className='max-w-[1024px] sm:px-5 px-3 mx-auto pt-20 text-center'>
+        <h2 className='text-3xl font-bold mb-4'>{listName}</h2>
+        <div className='mb-4 flex flex-col items-center'>
+          <label className='mb-2'>
+            Zmeniť názov zoznamu:{' '}
+            <input
+              type="text"
+              value={listName}
+              onChange={handleRename}
+              className='border rounded p-2'
+            />
+          </label>
+          <button onClick={() => alert(`Zmenený názov na: ${listName}`)} className="flex gap-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Premenovať<BsPencilSquare size={20}/></button>
+        </div>
+
+        <label className='mb-4 block'>
+          <input
+            type="checkbox"
+            checked={showCompleted}
+            onChange={() => setShowCompleted(!showCompleted)}
+            className='mr-2'
+          />Zobraziť Dokončené úlohy
+        </label>
+        <div className='flex flex-row gap-3 justify-center items-center'>
         <input
           type="text"
-          value={listName}
-          onChange={handleListNameChange}
-          className='border rounded p-2'
+          placeholder="Vyhľadávať podľa názvu"
+          value={search}
+          onChange={handleSearch}
+          className='w-1/3 border rounded p-2 mb-4'
         />
-      </label>
-      <button onClick={() => alert(`Zmenený názov na: ${listName}`)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Potvrdiť</button>
+        <BiSearchAlt size={25} className="mb-3"/>
+        </div>
+        {tasks.length === 0 ? (
+          <p className="text-red-500">Tvoj zoznam úloh je prázdny</p>
+        ) : (
+          <>
+            {tasks.every(task => task.taskDone) && (
+              <p className="text-green-500">Všetky úlohy sú dokončené!</p>
+            )}
+            <ul className='text-left py-3 mx-10'>
+              {tasks
+                .filter((task) => (showCompleted ? true : !task.taskDone))
+                .filter((task) =>
+                  task.taskMeno.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((task) => (
+                  <li key={task.id} className='mb-2'>
+                    <strong>{task.taskMeno}</strong> | {task.taskText} |{' '}
+                    <strong className='text-red-900 px-2'>Deadline:</strong> {task.taskDatum} |{' '}
+                    <label className='mr-2 px-2'>
+                      <input
+                        type="checkbox"
+                        checked={task.taskDone}
+                        onChange={() => handleTaskToggle(task.id, task.taskDone)}
+                      />{' '}
+                      Dokončené
+                    </label>
+                    {' '}
+                    <button onClick={() => handleTaskDelete(task.id)} className='bg-red-500 text-white px-2 py-1 rounded'>
+                      <AiOutlineDelete size={20}/>
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </>
+        )} 
 
-    </div>
-
-    <label className='mb-4 block'>
-      <input
-        type="checkbox"
-        checked={showCompleted}
-        onChange={() => setShowCompleted(!showCompleted)}
-        className='mr-2'
-        />Zobraziť Dokončené úlohy</label>
-
-    <input
-      type="text"
-      placeholder="Vyhľadávať podľa názvu"
-      value={searchTerm}
-      onChange={handleSearchChange}
-      className='w-full border rounded p-2 mb-4'
-    />
-    <ul className='text-left py-3 mx-10'>
-      {tasks
-        .filter((task) => (showCompleted ? true : !task.taskDone))
-        .filter((task) =>
-          task.taskMeno.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        .map((task) => (
-          <li key={task.id} className='mb-2'>
-            <strong>{task.taskMeno}</strong> | {task.taskText} |{' '}
-            <strong className='text-red-900'>Deadline:</strong> {task.taskDatum} |{' '}
-            <label className='mr-2'>
-              <input
-                type="checkbox"
-                checked={task.taskDone}
-                onChange={() => handleTaskToggle(task.id, task.taskDone)}
-              />{' '}
-              Done
-            </label>
-            {' '}
-            <button onClick={() => handleTaskDelete(task.id)} className='bg-red-500 text-white px-2 py-1 rounded'>
-              <AiOutlineDelete size={20}/>
-            </button>
-          </li>
-        ))}
-    </ul>
-
-    <div className='flex justify-around py-10'>
-      <Link href="/todoapp/newtask" className="underline"><button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Pridať novú úlohu</button></Link>
-      <Link href="/" className='underline'><button type="button" className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-400 dark:text-blue-400 dark:hover:text-white dark:hover:bg-blue-400 dark:focus:ring-blue-900">Návrat na domovskú obrazovku</button></Link>
-    </div>
-
-  </div>
-
-</main>
+        <div className='flex justify-around py-10'>
+          <Link href="/todoapp/newtask"><button className="flex gap-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><IoAddCircleOutline size={20}/>Pridať úlohu</button></Link>
+          <Link href="/"><button type="button" className="flex items-center gap-2 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-400 dark:text-blue-400 dark:hover:text-white dark:hover:bg-blue-400 dark:focus:ring-blue-900"><BsArrowLeftCircle size={20}/>Návrat</button></Link>
+        </div>
+      </div>
+    </main>
   );
 };
 
