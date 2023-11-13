@@ -119,8 +119,18 @@ const TaskList: React.FC = () => {
           </label>
           <button onClick={() => alert(`Zmenený názov na: ${listName}`)} className="flex gap-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Premenovať<BsPencilSquare size={20}/></button>
         </div>
-
-        <label className='mb-4 block'>
+        <div className='flex flex-row w-[90%] mx-auto justify-between items-center pt-10'>
+        <div className='flex flex-row gap-3 justify-center items-center'>
+          <input
+            type="text"
+            placeholder="Vyhľadávať úlohy"
+            value={search}
+            onChange={handleSearch}
+            className='border rounded p-2'
+          />
+          <BiSearchAlt size={25}/>
+        </div>
+        <label className='block'>
           <input
             type="checkbox"
             checked={showCompleted}
@@ -128,18 +138,9 @@ const TaskList: React.FC = () => {
             className='mr-2'
           />Zobraziť Dokončené úlohy
         </label>
-        <div className='flex flex-row gap-3 justify-center items-center'>
-          <input
-            type="text"
-            placeholder="Vyhľadávať podľa názvu"
-            value={search}
-            onChange={handleSearch}
-            className='w-1/3 border rounded p-2 mb-4'
-          />
-          <BiSearchAlt size={25} className="mb-3"/>
         </div>
         {tasks.length === 0 ? (
-          <p className="text-red-500">Tvoj zoznam úloh je prázdny</p>
+          <p className="text-red-500">Tvoj zoznam úloh je prázdny!</p>
         ) : (
           <>
             {tasks.every(task => task.taskDone) && (
